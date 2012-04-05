@@ -1,0 +1,5 @@
+This project simply returns the X, Y and Z co-ordinates of the supplied limb.
+
+You are able to return the real world values, or the difference from the player (HipCenter) position.
+
+It is written for the Kinect for Windows SDK v1

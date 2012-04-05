@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
+using Microsoft.Kinect;
 
 namespace LimbPositionSnapshot
 {
@@ -25,8 +16,11 @@ namespace LimbPositionSnapshot
         {
             InitializeComponent();
             setupKinect();
+
+            //Listen for our color/skeletal frames
             sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(sensor_AllFramesReady);
 
+            //Populate the combo box
             comboJoint.Items.Add("Current Player Position");
             comboJoint.Items.Add("Head");
             comboJoint.Items.Add("Shoulder Center");
@@ -49,6 +43,7 @@ namespace LimbPositionSnapshot
             comboJoint.Items.Add("Ankle Right");
             comboJoint.Items.Add("Foot Right");
 
+            //Default to "Current Player Position"
             comboJoint.SelectedIndex = 0;
         }
 
@@ -59,24 +54,23 @@ namespace LimbPositionSnapshot
                 //COLOUR IMAGE CODE
                 if (colorFrame == null)
                 {
+                    //No new data, don't do anything
                     return;
                 }
 
-                byte[] pixelData = new byte[colorFrame.PixelDataLength];
-                colorFrame.CopyPixelDataTo(pixelData);
-
+                //Update our RGB image
                 imgPlayer.Source = colorFrame.ToBitmapSource();
-
             }
 
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
                 if (skeletonFrame == null)
                 {
+                    //No new data, don't do anything
                     return;
                 }
 
-                
+                //If there's a skeleton, reference the first one you find
                 skeletonFrame.CopySkeletonDataTo(allSkeletons);
 
                 skeleton = (from s in allSkeletons
@@ -89,7 +83,6 @@ namespace LimbPositionSnapshot
         private Skeleton[] allSkeletons = new Skeleton[6];
         private Skeleton skeleton;
         private JointType jointTracked;
-        private JointType jointDiff;
 
         public void setupKinect()
         {
@@ -105,6 +98,7 @@ namespace LimbPositionSnapshot
                 switch (sensor.Status)
                 {
                     case KinectStatus.Connected:
+                        //Initialise the color and skeleton data streams
                         sensor.ColorStream.Enable(ColorImageFormat.RgbResolution1280x960Fps12);
                         sensor.SkeletonStream.Enable();
 
@@ -114,11 +108,13 @@ namespace LimbPositionSnapshot
                         }
                         catch (System.IO.IOException)
                         {
+                            //More than one program using the Kinect
                             MessageBox.Show("One program at a time, please");
                             throw;
                         }
                         break;
                     case KinectStatus.Disconnected:
+                        //No Kinect attached
                         MessageBox.Show("No Kinect connected :(");
                         break;
                 }
@@ -129,14 +125,17 @@ namespace LimbPositionSnapshot
         {
             if (skeleton != null)
             {
+                //If there's a skeleton visible...
                 if (chkFromHipCenter.IsChecked.Value)
                 {
+                    //Relative from the player position
                     txtX.Text = (skeleton.Joints[jointTracked].Position.X - skeleton.Joints[JointType.HipCenter].Position.X).ToString();
                     txtY.Text = (skeleton.Joints[jointTracked].Position.Y - skeleton.Joints[JointType.HipCenter].Position.Y).ToString();
                     txtZ.Text = (skeleton.Joints[jointTracked].Position.Z- skeleton.Joints[JointType.HipCenter].Position.Z).ToString();
                 }
                 else
                 {
+                    //Real world space
                     txtX.Text = skeleton.Joints[jointTracked].Position.X.ToString();
                     txtY.Text = skeleton.Joints[jointTracked].Position.Y.ToString();
                     txtZ.Text = skeleton.Joints[jointTracked].Position.Z.ToString();
@@ -144,6 +143,7 @@ namespace LimbPositionSnapshot
             }
             else
             {
+                //Blank out the readouts
                 txtX.Text = "";
                 txtY.Text = "";
                 txtZ.Text = "";
@@ -151,9 +151,8 @@ namespace LimbPositionSnapshot
         }
 
         private void comboJoint_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //MessageBox.Show(comboJoint.SelectedItem.ToString())
-            
+        { 
+            //Update what limb we are tracking based on the dropdown
             switch (comboJoint.SelectedItem.ToString())
             {
                 case "Current Player Position":
@@ -224,18 +223,17 @@ namespace LimbPositionSnapshot
 
         public void stopKinect(KinectSensor theSensor)
         {
+            //Kill off the sensor for other programs to use
             if (theSensor != null)
             {
                 theSensor.Stop();
-                theSensor.AudioSource.Stop();
             }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            //MessageBox.Show("DOES NOT FAIL!");
+            //Stop the Kinect
             stopKinect(sensor);
-            //StartScreen.speechRecognizer.Stop();
         }
     }
 }

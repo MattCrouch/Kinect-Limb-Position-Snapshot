@@ -8,9 +8,9 @@
         <Label Content="X:" Height="38" HorizontalAlignment="Left" Margin="624,303,0,0" Name="lblX" VerticalAlignment="Top" Width="182" FontSize="20" />
         <Label Content="Y:" FontSize="20" Height="38" HorizontalAlignment="Left" Margin="624,347,0,0" Name="lblY" VerticalAlignment="Top" Width="182" />
         <Label Content="Z:" FontSize="20" Height="38" HorizontalAlignment="Left" Margin="624,391,0,0" Name="lblZ" VerticalAlignment="Top" Width="182" />
-        <TextBox Height="36" HorizontalAlignment="Left" Margin="648,305,0,0" Name="txtX" VerticalAlignment="Top" Width="158" FontSize="20" Text="" />
-        <TextBox FontSize="20" Height="36" HorizontalAlignment="Left" Margin="648,349,0,0" Name="txtY" Text="" VerticalAlignment="Top" Width="158" />
-        <TextBox FontSize="20" Height="36" HorizontalAlignment="Left" Margin="648,393,0,0" Name="txtZ" Text="" VerticalAlignment="Top" Width="158" />
+        <TextBox Height="36" HorizontalAlignment="Left" Margin="648,305,0,0" Name="txtX" VerticalAlignment="Top" Width="158" FontSize="20" Text="" MouseDoubleClick="txt_MouseUp" />
+        <TextBox FontSize="20" Height="36" HorizontalAlignment="Left" Margin="648,349,0,0" Name="txtY" Text="" VerticalAlignment="Top" Width="158" MouseDoubleClick="txt_MouseUp" />
+        <TextBox FontSize="20" Height="36" HorizontalAlignment="Left" Margin="648,393,0,0" Name="txtZ" Text="" VerticalAlignment="Top" Width="158" MouseDoubleClick="txt_MouseUp" />
         <ComboBox Height="23" HorizontalAlignment="Left" Margin="648,12,0,0" Name="comboJoint" VerticalAlignment="Top" Width="158" ItemStringFormat="" SelectionChanged="comboJoint_SelectionChanged"></ComboBox>
         <CheckBox Content="From Hip Center?" Height="16" HorizontalAlignment="Left" Margin="648,41,0,0" Name="chkFromHipCenter" VerticalAlignment="Top" Width="158" IsChecked="False" />
     </Grid>

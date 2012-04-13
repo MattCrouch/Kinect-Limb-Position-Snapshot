@@ -235,5 +235,16 @@ namespace LimbPositionSnapshot
             //Stop the Kinect
             stopKinect(sensor);
         }
+
+        private void txt_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TextBox textbox = (TextBox)sender;
+
+            textbox.SelectionStart = 0;
+            textbox.SelectionLength = textbox.Text.Length;
+
+            Clipboard.SetText(textbox.Text);
+        }
+
     }
 }
